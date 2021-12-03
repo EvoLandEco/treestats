@@ -23,6 +23,7 @@ size_t find_parent(const std::vector< std::vector< float >>& ltable,
   }
 }
 
+namespace treestats {
 
 size_t calc_sackin(const std::vector< std::vector< float >>& ltable) {
   std::vector< int > s_values(ltable.size(), 0);
@@ -46,6 +47,8 @@ size_t calc_sackin(const std::vector< std::vector< float >>& ltable) {
   return(std::accumulate(s_values.begin(), s_values.end(), 0));
 }
 
+}  
+  
 float correct_pda(const std::vector< std::vector< float >>& ltable,
                   float Is) {
   float n = ltable.size();
