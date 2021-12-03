@@ -2,6 +2,7 @@
 #define sackin_h
 
 #include <vector>
+#include "export_func.h"
 
 size_t find_parent(const std::vector< std::vector< float >>& ltable,
                    int focal_id,
@@ -61,5 +62,8 @@ float correct_yule(const std::vector< std::vector< float >>& ltable,
   }
   return (Is - 2 * n * sum_count) / n;
 }
+
+
+
 
 #endif
