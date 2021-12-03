@@ -14,8 +14,9 @@
 # define STATS_EXTERN(T) extern "C" T
 #endif
 
+namespace treestats {
 
-typedef size_t (*treestats_sackin)(const std::vector< std::vector< float >>&);
+  typedef size_t (*treestats_sackin)(const std::vector< std::vector< float >>&);
 
-
+}
 #endif
