@@ -2,18 +2,24 @@
 % Please edit documentation in R/ILnumber.R
 \name{ILnumber}
 \alias{ILnumber}
-\title{Calculate ILnumber, from the phyloTop package. The ILnumber is the number
-of internal nodes with a single tip child.}
+\title{ILnumber}
 \usage{
-ILnumber(input_obj)
+ILnumber(input_obj, normalization = "none")
 }
 \arguments{
 \item{input_obj}{phylo object or ltable}
+
+\item{normalization}{"none" or "tips", in which case the result is normalized
+by dividing by N - 2, where N is the number of tips.}
 }
 \value{
 ILnumber
 }
 \description{
-Calculate ILnumber, from the phyloTop package. The ILnumber is the number
-of internal nodes with a single tip child.
+The ILnumber is the number of internal nodes with a
+single tip child. Higher values typically indicate a tree that
+is more unbalanced.
+
+The ILnumber is the number of internal nodes with a single tip child, as
+adapted from the phyloTop package.
 }

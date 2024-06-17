@@ -2,12 +2,15 @@
 % Please edit documentation in R/max_depth.R
 \name{max_depth}
 \alias{max_depth}
-\title{Fast function using C++ to calculate maximum depth metric}
+\title{Maximum depth metric}
 \usage{
-max_depth(phy)
+max_depth(phy, normalization = "none")
 }
 \arguments{
 \item{phy}{phylo object or ltable}
+
+\item{normalization}{"none" or "tips", in which case the resulting statistic
+is divided by the number of tips in the tree.}
 }
 \value{
 Maximum depth (in number of edges)

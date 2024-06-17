@@ -2,7 +2,7 @@
 % Please edit documentation in R/rquartet.R
 \name{rquartet}
 \alias{rquartet}
-\title{Fast function using C++ to calculate the rquartet index.}
+\title{Rquartet index.}
 \usage{
 rquartet(phy, normalization = "none")
 }
@@ -10,7 +10,7 @@ rquartet(phy, normalization = "none")
 \item{phy}{phylo object or ltable}
 
 \item{normalization}{The index can be normalized by the expectation under
-the Yule or PDA model.}
+the Yule ("yule") or PDA model ("pda").}
 }
 \value{
 rquartet index

@@ -1,4 +1,4 @@
-#' Calculate the nLTT, using C++.
+#' Normalized LTT statistic
 #' @description The nLTT statistic calculates the sum of
 #' absolute differences in the number of lineages over time, where both the
 #' number of lineages and the time are normalized. The number of lineages is
@@ -10,7 +10,10 @@
 #' from the nLTT package.
 #' @param phy phylo object or ltable
 #' @param ref_tree reference tree to compare with (should be same type as phy)
-#' @references Janzen, T., Höhna, S. and Etienne, R.S. (2015), Approximate Bayesian Computation of diversification rates from molecular phylogenies: introducing a new efficient summary statistic, the nLTT. Methods Ecol Evol, 6: 566-575. https://doi.org/10.1111/2041-210X.12350
+#' @references Janzen, T., Höhna, S. and Etienne, R.S. (2015), Approximate
+#' Bayesian Computation of diversification rates from molecular phylogenies:
+#' introducing a new efficient summary statistic, the nLTT. Methods Ecol Evol,
+#' 6: 566-575. https://doi.org/10.1111/2041-210X.12350
 #' @return number of lineages
 #' @export
 #' @examples simulated_tree <- ape::rphylo(n = 10, birth = 1, death = 0)
@@ -21,18 +24,24 @@ nLTT <- function(phy, # nolint
                  ref_tree) {
 
   if (inherits(phy, "phylo")) {
+    if (inherits(ref_tree, "matrix")) {
+      return(nLTT(ref_tree, phy))
+    }
+
     return(calc_nltt_cpp(phy, ref_tree))
   }
 
   if (inherits(phy, "matrix")) {
+    if (inherits(ref_tree, "phylo")) {
+       ref_tree <- treestats::phylo_to_l(ref_tree)
+    }
     return(calc_nltt_ltable_cpp(phy, ref_tree))
   }
 
   stop("input needs to be phylo or ltable object")
 }
 
-#' Calculates the nLTT statistic using a reference 'empty' tree with only
-#' two lineages.
+#' Reference nLTT statistic
 #' @description The base nLTT statistic can be used as a semi stand-alone
 #' statistic for phylogenetic trees. However, please note that although this
 #' provides a nice way of checking the power of the nLTT statistic without

@@ -1,2 +1,12 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.github
+^\.gitignore
+^\.RData
+^\.Rhistory
+
+^.vscode
+^.DS_Store
+
+^articles$
+^docs$

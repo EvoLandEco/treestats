@@ -1,4 +1,4 @@
-#' Fast function using C++ to calculate the mean I value.
+#' Mean I statistic.
 #' @description The mean I value is defined for all nodes with at least 4 tips
 #' connected, such that different topologies can be formed. Then, for each node,
 #' I = (nm - nt/2) / (nt - 1 - nt/2), where nt is the total number of tips
@@ -21,14 +21,16 @@ mean_i <- function(phy) {
 
   if (inherits(phy, "matrix")) {
     if (length(phy[, 1]) < 4) {
-      stop("I statistic is only available for trees with at least 4 tips.")
+      warning("I statistic is only available for trees with at least 4 tips.")
+      return(NA)
     }
     return(calc_Ibased_ltable_cpp(phy))
   }
   if (inherits(phy, "phylo")) {
 
     if (length(phy$tip.label) < 4) {
-      stop("I statistic is only available for trees with at least 4 tips.")
+      warning("I statistic is only available for trees with at least 4 tips.")
+      return(NA)
     }
 
     return(calc_Ibased_cpp(as.vector(t(phy$edge))))

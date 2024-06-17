@@ -2,12 +2,15 @@
 % Please edit documentation in R/max_width.R
 \name{max_width}
 \alias{max_width}
-\title{Fast function using C++ to calculate the maximum width of branch depth.}
+\title{Maximum width of branch depths.}
 \usage{
-max_width(phy)
+max_width(phy, normalization = "none")
 }
 \arguments{
 \item{phy}{phylogeny or ltable}
+
+\item{normalization}{"none" or "tips", in which case the resulting statistic
+is divided by the number of tips in the tree.}
 }
 \value{
 maximum width
@@ -16,11 +19,11 @@ maximum width
 Calculates the maximum width, this is calculated by first
 collecting the depth of each node and tip across the entire tree, where the
 depth represents the distance (in nodes) to the root. Then, the width
-represents the number of occurrences of each possible depth. The maximal width
-then returns the maximum number of such occurences.
+represents the number of occurrences of each possible depth. The maximal
+width then returns the maximum number of such occurences.
 }
 \references{
 C. Colijn and J. Gardy. Phylogenetic tree shapes resolve disease
 transmission patterns. Evolution, Medicine, and Public Health,
-2014(1):96-108, 2014. ISSN 2050-6201. doi: 10.1093/emph/eou018..
+2014(1):96-108, 2014. ISSN 2050-6201. doi: 10.1093/emph/eou018.
 }

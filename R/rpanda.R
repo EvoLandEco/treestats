@@ -10,13 +10,14 @@ integr <- function(x, f) {
   return(integral)
 }
 
+
 #' @keywords internal
 skew_ness <- function(x) {
   n <- length(x)
   return((sum((x - mean(x)) ^ 3) / n) / (sum((x - mean(x)) ^ 2) / n) ^ (3 / 2))
 }
 
-#' function to calculate the laplacian spectrum, from RPANDA
+#' Laplacian spectrum statistics, from RPANDA
 #' @description Computes the distribution of eigenvalues for the modified graph
 #' Laplacian of a phylogenetic tree, and several summary statistics of this
 #' distribution. The modified graph Laplacian of a phylogeny is given by the
@@ -37,29 +38,70 @@ skew_ness <- function(x) {
 #' distribution 4) peak_height the largest y-axis valueof the spectral
 #' density distribution and 5) eigengap theposition ofthe largest
 #' difference between eigenvalues, giving the number of modalities in the tree.
-#' @references Eric Lewitus, Helene Morlon, Characterizing and Comparing Phylogenies from their Laplacian Spectrum, Systematic Biology, Volume 65, Issue 3, May 2016, Pages 495–507, https://doi.org/10.1093/sysbio/syv116
+#' @references Eric Lewitus, Helene Morlon, Characterizing and Comparing
+#' Phylogenies from their Laplacian Spectrum, Systematic Biology, Volume 65,
+#' Issue 3, May 2016, Pages 495–507, https://doi.org/10.1093/sysbio/syv116
 #' @export
-calc_lapl_spectrum <- function(phy) {
+laplacian_spectrum <- function(phy) {
 
-  lapl_mat <- prep_lapl_spec(phy)
+  if (inherits(phy, "matrix")) {
+    phy <- treestats::l_to_phylo(phy, drop_extinct = FALSE)
+  }
+  if (!inherits(phy, "phylo")) {
+    stop("input object has to be phylo or ltable")
+  }
+  n <- length(phy$tip.label)
+  m <- n - 1
+  nm <- n + m
+  if (nm > 46340) { # sqrt(2^31 - 1) #nolint
+    stop("tree too big")
+  }
+
+  kernel_g <- function(x, mean = 0, sd = 1) {
+    return(stats::dnorm(x, mean = mean, sd = sd))
+  }
+
+  dens_rpanda <- function(x,
+                          bw = stats::bw.nrd0,
+                          kernel = kernel_g,
+                          n = 4096,
+                          from = min(x) - 3 * sd, to = max(x) + 3 * sd,
+                          adjust = 1,
+                          ...) {
+    if (has_na <- any(is.na(x))) {
+      x <- stats::na.omit(x)
+      if (length(x) == 0)
+        stop("no finite or non-missing data!")
+    }
+    sd <- (if (is.numeric(bw))
+      bw[1]
+      else bw(x)) * adjust
+    xx <- seq(from, to, len = n)
+    mat <- outer(xx, x, kernel, sd = sd, ...)
+    structure(list(x = xx, y = rowMeans(mat), bw = sd, call = match.call(),
+                   n = length(x), data.name = deparse(substitute(x)),
+                   has.na = has_na), class = "density")
+  }
+
+  lapl_mat <- -prep_lapl_spec(phy)
 
   e <- eigen(lapl_mat, symmetric = TRUE, only.values = TRUE)
 
   x <- subset(e$values, e$values >= 1)
-  d <- stats::density(log(x))
+  d <- dens_rpanda(log(x))
   dsc <- d$y / (integr(d$x, d$y))
   principal_eigenvalue <- max(x)
   skewness <- skew_ness(x)
   peak_height <- max(dsc)
   gaps <- abs(diff(x))
-  gapMat <- as.matrix(gaps)  #nolint
-  modalities <- seq_along(gapMat)
-  gapMatCol <- cbind(modalities, gapMat)  #nolint
-  eigenGap <- subset(gapMatCol, gapMatCol[, 2] == max(gapMatCol[, 2]))  #nolint
+  gap_mat <- as.matrix(gaps)  # nolint
+  modalities <- seq_along(gap_mat)
+  gap_mat_col <- cbind(modalities, gap_mat)  # nolint
+  eigen_gap <- subset(gap_mat_col, gap_mat_col[, 2] == max(gap_mat_col[, 2]))
   res <- list(eigenvalues = x,
               principal_eigenvalue = principal_eigenvalue,
               asymmetry = skewness,
               peakedness = peak_height,
-              eigengap = eigenGap[, 1])
+              eigengap = eigen_gap[, 1])
   return(res)
 }

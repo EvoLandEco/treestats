@@ -1,12 +1,14 @@
-#' Calculate the number of tips of a tree, including extinct tips.
+#' Number of tips of a tree, including extinct tips.
 #' @param phy phylo object
 #' @return number of lineages
 #' @export
 number_of_lineages <- function(phy) {
-
-  calc_num_lin <- function(focal_tree) {
-    return(length(focal_tree$tip.label))
+  if (inherits(phy, "matrix")) {
+    return(length(phy[, 1]))
   }
 
-  return(apply_function_phy(phy, calc_num_lin))
+  if (inherits(phy, "phylo")) {
+      return(length(phy$tip.label))
+  }
+  stop("input object has to be phylo or ltable")
 }

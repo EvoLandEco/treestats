@@ -2,7 +2,7 @@
 % Please edit documentation in R/gamma.R
 \name{gamma_statistic}
 \alias{gamma_statistic}
-\title{Calculate the gamma statistic, using a fast implementation in C++.}
+\title{Gamma statistic}
 \usage{
 gamma_statistic(phy)
 }
@@ -23,8 +23,10 @@ the tree. Only available for ultrametric trees.
 \examples{
 simulated_tree <- ape::rphylo(n = 10, birth = 1, death = 0)
 gamma_statistic(simulated_tree) # should be around 0.
-ddd_tree <- DDD::dd_sim(pars = c(1, 0, 10), age = 7)$tes
-gamma_statistic(ddd_tree) # because of diversity dependence, should be < 0
+if (requireNamespace("DDD")) {
+  ddd_tree <- DDD::dd_sim(pars = c(1, 0, 10), age = 7)$tes
+  gamma_statistic(ddd_tree) # because of diversity dependence, should be < 0
+}
 }
 \references{
 Pybus, O. G. and Harvey, P. H. (2000) Testing macro-evolutionary

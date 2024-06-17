@@ -2,12 +2,12 @@
 % Please edit documentation in R/crown_age.R
 \name{crown_age}
 \alias{crown_age}
-\title{Calculates the crown age of a tree using C++.}
+\title{Crown age of a tree.}
 \usage{
 crown_age(phy)
 }
 \arguments{
-\item{phy}{phylo object}
+\item{phy}{phylo object or ltable}
 }
 \value{
 crown age

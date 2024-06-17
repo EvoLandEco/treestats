@@ -1,11 +1,22 @@
-#ifndef AVGLADDER_H
-#define AVGLADDER_H
+// Copyright 2022 - 2024 Thijs Janzen
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+#pragma once
 
 #include <vector>
 #include <array>
 
 
-double calc_ladder(const std::vector< long >& tree_edge) {
+double calc_ladder(const std::vector< int >& tree_edge,
+                   bool return_max) {
   struct node_entry {
     std::array< int, 2> daughters;
     size_t daughter_index = 0;
@@ -16,18 +27,18 @@ double calc_ladder(const std::vector< long >& tree_edge) {
     }
   };
 
-  long max_node_val = *std::max_element(tree_edge.begin(), tree_edge.end());
+  int max_node_val = *std::max_element(tree_edge.begin(), tree_edge.end());
   int root_no = 2 + 0.25 * tree_edge.size();
 
   std::vector< node_entry > edge_mat(max_node_val + 1 - root_no);
   std::vector< int > tips(edge_mat.size(), 0);
 
-  for (size_t i = 0; i < tree_edge.size(); i += 2 ) {
+  for (size_t i = 0; i < tree_edge.size(); i += 2) {
     int node_lab = tree_edge[i] - root_no;
 
     int other_lab = tree_edge[i + 1] - root_no;
 
-    if (node_lab > edge_mat.size() || node_lab < 0) {
+    if (node_lab > static_cast<int>(edge_mat.size()) || node_lab < 0) {
       throw std::out_of_range("node_lab > edge_mat.size()");
     }
 
@@ -42,18 +53,17 @@ double calc_ladder(const std::vector< long >& tree_edge) {
   }
 
 
-  double mean_val = 0.0;
+  double store_val = 0.0;
   int count_val = 0;
 
   for (size_t i = 0; i < edge_mat.size(); ++i) {
-
     auto daughter1 = edge_mat[i].daughters[0];
     auto daughter2 = edge_mat[i].daughters[1];
 
-    if (daughter1 > 0 && daughter1 >  tips.size()) {
+    if (daughter1 > 0 && daughter1 > static_cast<int>(tips.size())) {
       throw std::out_of_range("daughter1 > tips.size()");
     }
-    if (daughter2 > 0 && daughter2 > tips.size()) {
+    if (daughter2 > 0 && daughter2 > static_cast<int>(tips.size())) {
       throw std::out_of_range("daughter2 > tips.size()");
     }
 
@@ -72,15 +82,16 @@ double calc_ladder(const std::vector< long >& tree_edge) {
     }
 
     if (tips[i] > 1)  {
-      mean_val += tips[i];
+      if (return_max == true) {
+        if (tips[i] > store_val) store_val = tips[i];
+      } else {
+        store_val += tips[i];
+      }
       count_val++;
     }
   }
 
-  if (count_val > 0) mean_val *= 1.0 / count_val;
+  if (count_val > 0 && return_max == false) store_val *= 1.0 / count_val;
 
-  return mean_val; // * 1.0 / count_val;
+  return store_val;  // * 1.0 / count_val;
 }
-
-
-#endif

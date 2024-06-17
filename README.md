@@ -1,12 +1,14 @@
 # treestats
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/treestats)](https://cran.r-project.org/package=treestats)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/treestats)](https://cran.r-project.org/package=treestats)
+[![](https://cranlogs.r-pkg.org/badges/treestats)](https://cran.r-project.org/package=treestats)
 [![R-CMD-check](https://github.com/thijsjanzen/treestats/workflows/R-CMD-check/badge.svg)](https://github.com/thijsjanzen/treestats/actions)
 
 Branch|CodeCov
 ---|---
-master|[![codecov.io](https://codecov.io/gh/thijsjanzen/treestats/branch/master/graph/badge.svg)](https://codecov.io/gh/thijsjanzen/treestats)
-develop|[![codecov.io](https://codecov.io/gh/thijsjanzen/treestats/branch/develop/graph/badge.svg)](https://codecov.io/gh/thijsjanzen/treestats)
+main|[![codecov.io](https://codecov.io/gh/thijsjanzen/treestats/branch/main/graph/badge.svg)](https://app.codecov.io/gh/thijsjanzen/treestats)
+develop|[![codecov.io](https://codecov.io/gh/thijsjanzen/treestats/branch/develop/graph/badge.svg)](https://app.codecov.io/gh/thijsjanzen/treestats)
 
 ## Description
 
@@ -20,7 +22,6 @@ The following summary statistics are included:
   - Crown age
   - Tree height
   - Pigot's Rho
-  - Mean branch length
   - Number of lineages
   - Laplacian spectrum
   - nLTT
@@ -47,6 +48,19 @@ The following summary statistics are included:
   - Max Width
   - Max Depth
   - Max Del Width
+  - Max Betweenness
+  - Max Closeness
+  - Wiener Index
+  - Diameter
+  - Eigen Vector
+  - Mean branch length
+  - Variation branch length
+  - Mean branch length internal branches
+  - Variation branch length internal branches
+  - Mean branch length terminal branches
+  - Variation branch length terminal branches
+  - J one
+  - treeness
 
 ## Rcpp
 For all of these statistics, the package provides Rcpp versions that 
@@ -56,9 +70,8 @@ functions have been improved as well:
   - DDD::phylo2L
   - DDD::L2phylo
 
+![speed_03022024](https://github.com/thijsjanzen/treestats/assets/19486664/23058e0e-50fd-41f7-9b22-433456939499)
 
-![treestats_speed4](https://user-images.githubusercontent.com/19486664/154710093-eb596fdd-658d-437c-8249-fb2dfefb13d0.png)
-  
 ## C++ Library
 For the Rcpp improved summary statistics (excluding the RPANDA and DDD functions, 
 as these are only partially captured in Rcpp), tree independent C++ code is provided 

@@ -1,32 +1,40 @@
 context("area per pair")
 
 test_that("usage", {
-  set.seed(42)
-  focal_tree <- TreeSim::sim.bd.taxa(n = 100,
-                                     numbsim = 1,
-                                     lambda = 1, mu = 0)[[1]]
 
-  a1 <- treestats::area_per_pair(focal_tree)
-  a2 <- treebalance::areaPerPairI(focal_tree)
-  testthat::expect_equal(a1, a2)
+  if (requireNamespace("treebalance")) {
+    set.seed(42)
+    focal_tree <- ape::rphylo(n = 100, birth = 1, death = 0)
 
-  ltab <- treestats::phylo_to_l(focal_tree)
-  testthat::expect_equal(treestats::area_per_pair(focal_tree),
-                         treestats::area_per_pair(ltab))
+    a1 <- treestats::area_per_pair(focal_tree)
+    a2 <- treebalance::areaPerPairI(focal_tree)
+    testthat::expect_equal(a1, a2)
 
+    ltab <- treestats::phylo_to_l(focal_tree)
+    testthat::expect_equal(treestats::area_per_pair(focal_tree),
+                           treestats::area_per_pair(ltab))
 
+    # with extinct species:
+    focal_tree <- ape::rphylo(n = 100, birth = 1, death = 0.2, fossils = TRUE)
 
+    a1 <- treestats::area_per_pair(focal_tree)
+    a2 <- treebalance::areaPerPairI(focal_tree)
+    testthat::expect_equal(a1, a2)
 
-  # with extinct species:
-  focal_tree <- TreeSim::sim.bd.taxa(n = 100,
-                                     numbsim = 1,
-                                     lambda = 1, mu = 0.2)[[1]]
+    ltab <- treestats::phylo_to_l(focal_tree)
+    testthat::expect_equal(treestats::area_per_pair(focal_tree),
+                           treestats::area_per_pair(ltab))
+  }
+})
 
-  a1 <- treestats::area_per_pair(focal_tree)
-  a2 <- treebalance::areaPerPairI(focal_tree)
-  testthat::expect_equal(a1, a2)
+test_that("wrong_object", {
+  testthat::expect_error(
+    treestats::area_per_pair(10),
+    "input object has to be phylo or ltable"
+  )
 
-  ltab <- treestats::phylo_to_l(focal_tree)
-  testthat::expect_equal(treestats::area_per_pair(focal_tree),
-                         treestats::area_per_pair(ltab))
+  testthat::expect_error(
+    treestats::area_per_pair(list()),
+    "input object has to be phylo or ltable"
+  )
 })

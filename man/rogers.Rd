@@ -2,12 +2,16 @@
 % Please edit documentation in R/rogers.R
 \name{rogers}
 \alias{rogers}
-\title{Fast function using C++ to calculate the Rogers J index of (im)balance.}
+\title{Rogers J index of (im)balance.}
 \usage{
-rogers(phy)
+rogers(phy, normalization = "none")
 }
 \arguments{
 \item{phy}{phylo object or ltable}
+
+\item{normalization}{"none" or "tips", in which case the resulting statistic
+is divided by the number of tips - 2 (e.g. the maximum value of the rogers
+index for a tree).}
 }
 \value{
 Rogers index
@@ -15,15 +19,19 @@ Rogers index
 \description{
 The Rogers index is calculated as the total number of internal
 nodes that are unbalanced, e.g. for which both daughter nodes lead to a
-different number of extant tips.
+different number of extant tips. in other words, the number of nodes where
+L != R (where L(R) is the number of extant tips of the Left (Right) daughter
+node).
 }
 \examples{
 simulated_tree <- ape::rphylo(n = 10, birth = 1, death = 0)
 brts <- branching_times(simulated_tree)
-balanced_tree <- nodeSub::create_balanced_tree(brts)
-unbalanced_tree <- nodeSub::create_unbalanced_tree(brts)
-rogers(balanced_tree)
-rogers(unbalanced_tree) # should be higher
+if (requireNamespace("nodeSub")) {
+  balanced_tree <- nodeSub::create_balanced_tree(brts)
+  unbalanced_tree <- nodeSub::create_unbalanced_tree(brts)
+  rogers(balanced_tree)
+  rogers(unbalanced_tree) # should be higher
+}
 }
 \references{
 J. S. Rogers. Central Moments and Probability Distributions of

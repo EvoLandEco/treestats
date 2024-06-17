@@ -1,4 +1,4 @@
-#' Fast function using C++ to calculate the Aldous beta statistic.
+#' Aldous' beta statistic.
 #' @description The Beta statistic fits a beta splitting model to each node,
 #' assuming that the number of extant descendents of each daughter branch is
 #' split following a beta distribution, such that the number of extant
@@ -25,22 +25,32 @@
 #' Jones, Graham R. "Tree models for macroevolution and phylogenetic analysis."
 #' Systematic biology 60.6 (2011): 735-746.
 #' @export
-#' @examples simulated_tree <- ape::rphylo(n = 100, birth = 1, death = 0)
-#' brts <- branching_times(simulated_tree)
-#' balanced_tree <- nodeSub::create_balanced_tree(brts)
-#' unbalanced_tree <- nodeSub::create_unbalanced_tree(brts)
-#' beta_statistic(balanced_tree) # should be approximately -2
-#' beta_statistic(simulated_tree) # should be near 0
-#' beta_statistic(unbalanced_tree) # should be approximately 10
+#' @examples
+
+#' simulated_tree <- ape::rphylo(n = 100, birth = 1, death = 0)
+#' if (requireNamespace("nodeSub")) {
+#'   brts <- branching_times(simulated_tree)
+#'   balanced_tree <- nodeSub::create_balanced_tree(brts)
+#'   unbalanced_tree <- nodeSub::create_unbalanced_tree(brts)
+#'   beta_statistic(balanced_tree) # should be approximately 10
+#'   beta_statistic(simulated_tree) # should be near 0
+#'   beta_statistic(unbalanced_tree) # should be approximately -2
+#' }
 beta_statistic <- function(phy,
                            upper_lim = 10,
                            algorithm = "COBYLA",
                            abs_tol = 1e-4,
                            rel_tol = 1e-6) {
 
-  apply_function_phy_ltable(phy,
-                            calc_beta_cpp,
-                            calc_beta_ltable_cpp,
-                            only_extant = TRUE,
-                            upper_lim, algorithm, abs_tol, rel_tol)
+  if (inherits(phy, "matrix")) {
+    beta_stat <- calc_beta_ltable_cpp(phy, upper_lim,
+                                      algorithm, abs_tol, rel_tol)
+    return(beta_stat)
+  }
+  if (inherits(phy, "phylo")) {
+    beta_stat <- calc_beta_cpp(phy, upper_lim,
+                               algorithm, abs_tol, rel_tol)
+    return(beta_stat)
+  }
+  stop("input object has to be phylo or ltable")
 }

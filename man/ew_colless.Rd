@@ -17,15 +17,18 @@ colless index
 The equal weights Colless index is calculated as the sum of
 \eqn{abs(L - R) / (L + R - 2)} over all nodes where L + R > 2,
 where L (or R) is the number of extant tips associated with the L (or R)
-daughter branch at that node.  Higher values indicate higher imbalance.
+daughter branch at that node.  Maximal imbalance is associated with a value
+of 1.0. The ew_colless index is not sensitive to tree size.
 }
 \examples{
 simulated_tree <- ape::rphylo(n = 10, birth = 1, death = 0)
 brts <- branching_times(simulated_tree)
-balanced_tree <- nodeSub::create_balanced_tree(brts)
-unbalanced_tree <- nodeSub::create_unbalanced_tree(brts)
-ew_colless(balanced_tree)
-ew_colless(unbalanced_tree) # should be higher
+if (requireNamespace("nodeSub")) {
+  balanced_tree <- nodeSub::create_balanced_tree(brts)
+  unbalanced_tree <- nodeSub::create_unbalanced_tree(brts)
+  ew_colless(balanced_tree)
+  ew_colless(unbalanced_tree) # should be higher
+}
 }
 \references{
 A. O. Mooers and S. B. Heard. Inferring Evolutionary Process

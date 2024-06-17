@@ -1,4 +1,4 @@
-#' calculate Pigot's rho
+#' Pigot's rho
 #' @param phy phylo object
 #' @param extant_tree Pigot's rho is originally only defined for an extant tree,
 #' however we include functionality to calculate Pigot's rho for a complete
@@ -34,13 +34,8 @@ pigot_rho <- function(phy,
   }
 
   if (inherits(phy, "phylo")) {
-    if (phy$Nnode < 200) {
-      return(calc_rho_complete_cpp(phy))
-    } else {
-      return(calc_rho_cpp(phy))
-    }
+    return(calc_rho_cpp(phy))
   }
-
 
   stop("input object has to be phylo or ltable")
 }
